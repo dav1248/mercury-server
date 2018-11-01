@@ -1,0 +1,119 @@
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="http://code.jquery.com/jquery-1.5.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<!--
+-->
+</head>
+
+<body>
+<div id="title">
+<img src="univalle_logo.png" alt="Universidad del Valle" id="univalle_logo">
+<h1>Bionovo Mercury contamination database </h1>
+</div>
+
+<div id="content">
+
+<div id="controls">
+<input type="button" value="query system" id="query_sys" style="display: inline-block" />
+</div>
+
+<div id="data">
+<table id="data_table">
+
+<tr>
+ <th scope="col">place</th>
+ <th scope="col">date</th>
+ <th scope="col">time</th>
+ <th scope="col">concentration (ppb)</th>
+</tr>
+<tr>
+ <td>la toma- river1</td>
+ <td>31.10.18</td>
+ <td>13:15</td>
+ <td>500</td>
+</tr>
+</table>
+</div>
+
+</div>
+
+
+
+<section class="insert">
+    <h3>Insert Data</h3>
+    <form action="/insert" method="post">
+        <div class="input">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title">
+        </div>
+        <div class="input">
+            <label for="content">Content</label>
+            <input type="text" id="content_form" name="content">
+        </div>
+        <div class="input">
+            <label for="author">Author</label>
+            <input type="text" id="author" name="author">
+        </div>
+        <button type="submit">INSERT</button>
+    </form>
+</section>
+<section class="get">
+    <h3>Get Data</h3>
+    <a href="/get-data">LOAD DATA</a>
+    <div>
+    <% items.forEach(function(item) { %>
+            <article class="item">
+                <div>Title: <%= item.title %></div>
+                <div>Content: <%= item.content %></div>
+                <div>Author: <%= item.author %></div>
+                <div>ID: <%= item.id %></div>
+            </article>
+    <% }); %>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+<script>
+// Socket logic
+
+socket = io.connect('/browser');
+
+socket.onopen = function (event) {
+	console.log('Client Connected');
+	socket.send('hello'); // send a message event
+}
+
+$("#query_sys").click(function(){
+	socket.emit('query_sys','');
+});
+
+
+
+// listening
+
+socket.on('data',function(data){
+	
+	newLine = "<tr><td>"+1+"</td><td>"+2+"</td><td>"+3+"</td><td>"+4+"</td></tr>";
+
+	$("#data_table").append(newLine);
+
+});
+
+</script>
+	
+	
+</body>
+
+</html>
+
