@@ -6,6 +6,7 @@ var url = require('url');
 var http = require('http');
 var mongo = require('mongodb');
 var assert = require('assert');
+var bodyParser = require('body-parser');
 
 var url_db = 'mongodb://localhost:27017/test';
 
@@ -17,6 +18,16 @@ var testdata1 = {
 };
 
 // server init
+
+
+app.use(express.static(path.join(__dirname,'public')));
+
+app.use(bodyParser.json()); // support json encoded bodies
+
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
+
+
 app.get('',function(req, res){
 		res.render('index.ejs',{items:[]});
 });
@@ -26,12 +37,10 @@ app.get('/get-data', function(req, res, next){
 	 var resultArray = [];
 	 mongo.connect(url_db,function(err, db){
 		assert.equal(null,err);
-		var cursor = db.collection('user-data').find();
+		var cursor = db.collection('user_data').find();
 		cursor.forEach(function(doc,err){
-				assert(null,err);
-				resultsArray.push(doc);
-				
-			
+				assert.equal(null,err);
+				resultArray.push(doc);	
 		},function(){ //rendering view once sure that we are done fetching data, hence callback after comma
 				db.close();
 				res.render('index.ejs',{items: resultArray});
@@ -48,14 +57,14 @@ app.post('/insert', function(req, res, next){
 	
 	mongo.connect(url_db,function(err,db){
 		assert.equal(null,err);
-		db.collection('user-data').insertOne(item,function(err,res){
+		db.collection('user_data').insertOne(item,function(err,res){
 				assert.equal(null,err);
 				console.log('Item inserted');
 				db.close();
 		});
 	});
 	
-	//res.render('index.ejs',{items:[item]});
+	res.redirect('/');
 });
 
 app.post('/update', function(req, res, next){
@@ -65,9 +74,6 @@ app.post('/update', function(req, res, next){
 app.post('/delete', function(req, res, next){
 	
 });
-
-app.use(express.static(path.join(__dirname,'public')));
-
 
 
 
