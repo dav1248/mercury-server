@@ -4,11 +4,26 @@ var app = express();
 var path = require('path');
 var url = require('url');
 var http = require('http');
-var mongo = require('mongodb');
 var assert = require('assert');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
-var url_db = 'mongodb://localhost:27017/test';
+// mongoose init
+mongoose.connect('mongodb://localhost:27017/test',function(err, res){
+	if (err) {
+			console.log('ERROR connecting to test database: ' + err);
+	} else {
+			console.log('Connected to test database');
+	}
+});
+var Schema = mongoose.Schema; // defines how mongoose with write the data in the database
+var userDataSchema = new Schema({
+	title: {type: String, required: true},
+	content: String,
+	author: String
+}, {collection: 'user-data'});  // javascript object defining the schema
+var UserData = mongoose.model('UserData',userDataSchema); // instance of model, called document
+
 
 var testdata1 = {
 	"place": "moncul",
@@ -18,8 +33,6 @@ var testdata1 = {
 };
 
 // server init
-
-
 app.use(express.static(path.join(__dirname,'public')));
 
 app.use(bodyParser.json()); // support json encoded bodies
@@ -29,23 +42,17 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 
 app.get('',function(req, res){
-		res.render('index.ejs',{items:[]});
+	res.render('index.ejs',{items:[]});	
+	
 });
 
 app.get('/get-data', function(req, res, next){
-	 
-	 var resultArray = [];
-	 mongo.connect(url_db,function(err, db){
-		assert.equal(null,err);
-		var cursor = db.collection('user_data').find();
-		cursor.forEach(function(doc,err){
-				assert.equal(null,err);
-				resultArray.push(doc);	
-		},function(){ //rendering view once sure that we are done fetching data, hence callback after comma
-				db.close();
-				res.render('index.ejs',{items: resultArray});
-		}); 
-	 });
+	UserData.find()
+		.then(function(doc){
+			res.render('index.ejs',{items:doc});	
+			console.log(doc);
+	});	
+	
 });
 
 app.post('/insert', function(req, res, next){
@@ -55,26 +62,39 @@ app.post('/insert', function(req, res, next){
 		author: req.body.author
 	};
 	
-	mongo.connect(url_db,function(err,db){
-		assert.equal(null,err);
-		db.collection('user_data').insertOne(item,function(err,res){
-				assert.equal(null,err);
-				console.log('Item inserted');
-				db.close();
-		});
-	});
+	var data = new UserData(item); // we can do this because item has same struct as schema
+	data.save(); // stores it into the database
+	
 	
 	res.redirect('/');
 });
 
 app.post('/update', function(req, res, next){
+
 	
+	var id = req.body.id;
+	
+	UserData.findById(id,function(err, doc){
+		if (err){
+			console.error('error, no entry found');
+		}
+		doc.title = req.body.title;
+		doc.content = req.body.content;
+		doc.author = req.body.author;
+		doc.save();
+	});
+	
+	res.redirect('/');
 });
 
 app.post('/delete', function(req, res, next){
 	
-});
+	var id = req.body.id;
+	
+	UserData.findByIdAndRemove(id).exec(); // because not fetching any callback, need to exec
 
+	res.redirect('/');
+});
 
 
 var server = app.listen(8080,function(){
