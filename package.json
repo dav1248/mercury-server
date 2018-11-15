@@ -4,15 +4,18 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./bin/www"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.3",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "mongodb": "^2.2.36",
     "mongoose": "^4.7.6",
+    "morgan": "^1.9.1",
     "mqtt": "^2.18.8",
     "socket.io": "^2.1.1"
   }
