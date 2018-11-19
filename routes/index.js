@@ -31,13 +31,13 @@ var testdata1 = {
 
 
 router.get('',function(req, res){
-	res.render('index.ejs',{items:[]});	
+	res.render('index',{items:[]});	
 });
 
 router.get('/get-data', function(req, res, next){
 	UserData.find()
 		.then(function(doc){
-			res.render('index.ejs',{items:doc});	
+			res.render('index',{items:doc});	
 			console.log(doc);
 	});	
 	

@@ -13,6 +13,8 @@ var assert = require('assert');
 var bodyParser = require('body-parser');
 
 
+// set view engine
+app.set('view engine', 'ejs');
 
 // server init
 app.use(logger('dev'));
@@ -37,7 +39,7 @@ app.use(function(err, req, res, next) {
   
 	// render the error page
 	res.status(err.status || 500);
-	res.render('error');
+	res.render('error', {message: err.message});
   });
   
   module.exports = app;
