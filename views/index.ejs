@@ -1,5 +1,4 @@
 <html>
-
 <head>
 <link rel="stylesheet" type="text/css" href="style.css">
 <script src="http://code.jquery.com/jquery-1.5.min.js"></script>
@@ -11,16 +10,21 @@
 <body>
 <div id="title">
 <img src="univalle_logo.png" alt="Universidad del Valle" id="univalle_logo">
-<h1>Bionovo Mercury contamination database </h1>
+<h1>Bionovo Mercury concentration database </h1>
 </div>
 
+
+<div id="info" class="main_elem">
+<p class="text_centered">
+<b>Welcome to the Mercury concentration database of research group Bionovo.</b>
+</p>
+<p style="margin: 0 60px 0 60px;">
+Interactions with the database are done on the right pannel. You can view the database by clicking on the <b>get data</b> button. You can also download the data in <i>csv</i> format. For test purposes, insertion of new elements is possible. 
+<p>
+</div>
 <div id="content">
 
-<div id="controls">
-<input type="button" value="query system" id="query_sys" style="display: inline-block" />
-</div>
-
-<div id="data">
+<div id="data" class="main_elem">
 <table id="data_table">
 
 <tr>
@@ -35,14 +39,60 @@
  <td>13:15</td>
  <td>500</td>
 </tr>
+<% items.forEach(function(item){%>
+<tr>  
+<td><%=item.place%></td>
+<td><%=item.date%></td>
+<td><%=item.time%></td>
+<td><%=item.concentration%></td>
+<%});%>
 </table>
 </div>
 
+
+<div id="right-col" class="main_elem">
+
+    <div id="controls">
+    <h3> Filter data </h3>
+    <div class="input">
+        <label for="place">Place</label>
+        <input type="text" id="place" name="place">
+    </div>
+    <div class="input">
+        <label for="date">Date</label>
+        <input type="text" id="date" name="date">
+    </div>
+    </br>
+    <!--<input type="button" value="query system" id="query_sys" style="display: inline-block" />-->
+    <a href="/get-data" class="button"> get data </a>
+    </div>
+    <div id="insertion">
+    <h3> Insert entry to database </h3>
+    <form action="/insert" method="post">
+        <div class="input">
+            <label for="place">Place</label>
+            <input type="text" id="place" name="place">
+        </div>
+        <div class="input">
+            <label for="date">Date</label>
+            <input type="text" id="date" name="date">
+        </div>
+        <div class="input">
+            <label for="time">Time</label>
+            <input type="text" id="time" name="time">
+        </div>
+        <div class="input">
+            <label for="concentration">Concentration</label>
+            <input type="text" id="concentration" name="concentration">
+        </div>
+        <button type="submit"> insert </button>
+    </form>
+    </div>
 </div>
 
+</div>
 
 <!--
-
 <section class="insert">
     <h3>Insert Data</h3>
     <form action="/insert" method="post">
@@ -114,8 +164,6 @@
 
 
 
-
-
 <script>
 // Socket logic
 
@@ -129,8 +177,6 @@ socket.onopen = function (event) {
 $("#query_sys").click(function(){
 	socket.emit('query_sys','');
 });
-
-
 
 // listening
 

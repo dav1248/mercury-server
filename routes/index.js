@@ -5,20 +5,21 @@ var mongoose = require('mongoose');
 
 
 // mongoose init
-mongoose.connect('mongodb://localhost:27017/test',function(err, res){
+mongoose.connect('mongodb://localhost:27017/mercury',function(err, res){
 	if (err) {
 			console.log('ERROR connecting to test database: ' + err);
 	} else {
-			console.log('Connected to test database');
+			console.log('Connected to mercury database');
 	}
 });
-var Schema = mongoose.Schema; // defines how mongoose with write the data in the database
-var userDataSchema = new Schema({
-	title: {type: String, required: true},
-	content: String,
-	author: String
-}, {collection: 'user-data'});  // javascript object defining the schema
-var UserData = mongoose.model('UserData',userDataSchema); // instance of model, called document
+var Schema = mongoose.Schema; // defines how mongoose with write the data in the database and which collection to use
+var dataSchema = new Schema({
+	place: String,
+	date: {type: String, required: true},
+	time: {type: String, required: true},
+	concentration: {type: String, required: true}
+}, {collection: 'samples-data'});  // javascript object defining the schema
+var samplesData = mongoose.model('samplesData',dataSchema); // instance of model, called document
 
 
 var testdata1 = {
@@ -35,7 +36,7 @@ router.get('',function(req, res){
 });
 
 router.get('/get-data', function(req, res, next){
-	UserData.find()
+	samplesData.find()
 		.then(function(doc){
 			res.render('index',{items:doc});	
 			console.log(doc);
@@ -45,21 +46,20 @@ router.get('/get-data', function(req, res, next){
 
 router.post('/insert', function(req, res, next){
 	var item = {
-		title: req.body.title,
-		content: req.body.content,
-		author: req.body.author
+		place: req.body.place,
+		date: req.body.date,
+		time: req.body.time,
+		concentration: req.body.concentration
 	};
-	
-	var data = new UserData(item); // we can do this because item has same struct as schema
+	var data = new samplesData(item); // we can do this because item has same struct as schema
 	data.save(); // stores it into the database
 	
 	
-	res.redirect('/');
+	res.redirect('/get-data');
 });
 
 router.post('/update', function(req, res, next){
 
-	
 	var id = req.body.id;
 	
 	UserData.findById(id,function(err, doc){

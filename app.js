@@ -3,7 +3,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var router = require('./routes/index');
 
-
 var express = require('express');
 var mqtt = require('mqtt');
 var app = express();
