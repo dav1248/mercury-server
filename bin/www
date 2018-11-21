@@ -25,7 +25,7 @@ var server = http.createServer(app);
  * Initializes websocket interface
  * 
  */
-var io = require('../sockets').listen(server);
+var io = require('../routes/sockets').listen(server);
 
 
 /**
@@ -36,7 +36,7 @@ var io = require('../sockets').listen(server);
  *      username: 'pyklkptk',
  *      password: 'ZU46noxaEg5Q'
  */
-var client = require('../mqtt_client').connect('',{});
+var client = require('../routes/mqtt_client').connect('',null);
 
 /**
  * Listen on provided port, on all network interfaces.

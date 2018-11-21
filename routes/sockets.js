@@ -1,4 +1,11 @@
+/**
+ * Websocket handling for outside communication and front-end.
+ * 
+ */
+
+
 var socketio = require('socket.io');
+var samplesData = require('../database/samples_model');
 
 
 var testdata1 = {
@@ -34,7 +41,13 @@ module.exports.listen = function(server){
 	// websocket HTTP handling
 	io.of('mercury').on('connection', function(socket) {
 		console.log('raspi mercury server connected');
+		
+		socket.on('data-stream',function(data){
+		});
+	
 	});
+
+
 
 	return io;
 }
