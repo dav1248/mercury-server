@@ -3,93 +3,125 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 <script src="http://code.jquery.com/jquery-1.5.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<!--
--->
 </head>
 
 <body>
+
+<!-- Title block -->
 <div id="title">
 <img src="univalle_logo.png" alt="Universidad del Valle" id="univalle_logo">
 <h1>Bionovo Mercury concentration database </h1>
 </div>
 
-
+<!-- Information block -->
 <div id="info" class="main_elem">
-<p class="text_centered">
-<b>Welcome to the Mercury concentration database of research group Bionovo.</b>
-</p>
-<p style="margin: 0 60px 0 60px;">
-Interactions with the database are done on the right pannel. You can view the database by clicking on the <b>get data</b> button. You can also download the data in <i>csv</i> format. For test purposes, insertion of new elements is possible. 
-<p>
+    <p class="text_centered">
+    <b>Welcome to the Mercury concentration database of research group Bionovo.</b>
+    </p>
+    <p style="margin: 0 60px 0 60px;">
+    Interactions with the database are done on the right pannel. You can view the database by clicking on the <b>get data</b> button. You can also download the data in <i>csv</i> format. For test purposes, insertion of new elements is possible. 
+    <p>
 </div>
+
+<!-- Content block -->
 <div id="content">
-
-<div id="data" class="main_elem">
-<table id="data_table">
-
-<tr>
- <th scope="col">place</th>
- <th scope="col">date</th>
- <th scope="col">time</th>
- <th scope="col">concentration (ppb)</th>
-</tr>
-<tr>
- <td>la toma- river1</td>
- <td>31.10.18</td>
- <td>13:15</td>
- <td>500</td>
-</tr>
-<% items.forEach(function(item){%>
-<tr>  
-<td><%=item.place%></td>
-<td><%=item.date%></td>
-<td><%=item.time%></td>
-<td><%=item.concentration%></td>
-<%});%>
-</table>
-</div>
-
-
-<div id="right-col" class="main_elem">
-
-    <div id="controls">
-    <h3> Filter data </h3>
-    <div class="input">
-        <label for="place">Place</label>
-        <input type="text" id="place" name="place">
-    </div>
-    <div class="input">
-        <label for="date">Date</label>
-        <input type="text" id="date" name="date">
-    </div>
-    </br>
-    <!--<input type="button" value="query system" id="query_sys" style="display: inline-block" />-->
-    <a href="/get-data" class="button"> get data </a>
-    </div>
-    <div id="insertion">
-    <h3> Insert entry to database </h3>
-    <form action="/insert" method="post">
-        <div class="input">
-            <label for="place">Place</label>
-            <input type="text" id="place" name="place">
+    <div id="left-col" class="main_elem">
+        <div id="table_tools">
+        <a href="/exporttocsv" id="exportcsv"> export to CSV </a>
         </div>
-        <div class="input">
-            <label for="date">Date</label>
-            <input type="text" id="date" name="date">
-        </div>
-        <div class="input">
-            <label for="time">Time</label>
-            <input type="text" id="time" name="time">
-        </div>
-        <div class="input">
-            <label for="concentration">Concentration</label>
-            <input type="text" id="concentration" name="concentration">
-        </div>
-        <button type="submit"> insert </button>
-    </form>
+        <table id="data_table">
+            <tr>
+                <th scope="col">place</th>
+                <th scope="col">date</th>
+                <th scope="col">time</th>
+                <th scope="col">concentration (ppb)</th>
+                <th scole="col"> ID </th>
+                <th scole="col"> batch </th>
+            </tr>
+            <% items.forEach(function(item){%>
+            <tr>
+            <td><%=item.place%></td>
+            <td><%=item.date.getDate()%>/<%=item.date.getMonth()%>/<%=item.date.getFullYear()%></td>
+            <td><%=item.date.getHours()%>:<%=item.date.getMinutes()%></td>
+            <td><%=item.concentration%></td>
+            <td><%=item._id%></td> 
+            <td><%=item.batch%></td> 
+            </tr>
+            <%});%>
+        </table>
     </div>
-</div>
 
+    <!-- Right column containing user input -->
+    <div id="right-col" class="main_elem">
+
+        <div id="query">
+            <h3 class="text_centered"> Query data </h3>
+            <form action="/query-data" method="post" class="group">
+                <div class="input">
+                    <label for="place">Place</label>
+                    <input type="text" id="place" name="place">
+                </div>
+                <div class="input">
+                    <label for="date">Date</label>
+                    <input type="text" id="date" name="date">
+                </div>
+                <button type="submit"> search data </button>
+            </form>
+            <!--<input type="button" value="query system" id="query_sys" style="display: inline-block" />-->
+            <a href="/get-data" class="button"> get all data </a>
+        </div>
+        </br>
+        <hr>
+
+        <div id="insertion">
+            <h3 class="text_centered"> Insert entry to database </h3>
+            <form action="/insert" method="post">
+                <div class="input">
+                    <label for="place">Place</label>
+                    <input type="text" id="place" name="place">
+                </div>
+                <div class="input">
+                    <label for="date">Date</label>
+                    <input type="text" id="date" name="date">
+                </div>
+                <div class="input">
+                    <label for="concentration">Concentration</label>
+                    <input type="text" id="concentration" name="concentration">
+                </div>
+                <div class="input">
+                <label for="batch">Batch</label>
+                <input type="text" id="batch" name="batch">
+            </div>
+                <button type="submit"> insert </button>
+            </form>
+        </div>
+        </br>
+        <hr>
+        <div id="deletion">
+            <h3 class="text_centered"> Delete data </h3>
+            <p> You can delete some element of the database by entering its unique ID:</p>
+            <form action="/delete-elem" method="post">
+                <div class="input">
+                    <label for="id_del">ID</label>
+                    <input type="text" id="id_del" name="id_del">
+                </div>
+                <button type="submit"> delete </button>
+
+            </form>
+            </br>
+            <p> To reset the entire database, click the following button (<span style="color:red">warning: all data will be permanently erased</span>):</p>
+            <form action="/delete-all" method="post">
+                <div class="input">
+                    <label for="pass_del">password</label>
+                    <input type="password" id="pass_del" name="pass_del">
+                </div>
+                <button type="submit"> reset database </a>
+            </form>
+
+        </div>
+        </br>
+        <hr>
+    </div>
 </div>
 
 <!--
