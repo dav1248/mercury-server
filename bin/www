@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+ var config = require('../config.json');
 var app = require('../app');
 var debug = require('debug')('mercury-server:server');
 var http = require('http');

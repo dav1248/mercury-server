@@ -3,14 +3,15 @@
  *
  */ 
 
+var config = require('../config.json');
 var mongoose = require('mongoose');
 
 // mongoose init
-mongoose.connect('mongodb://localhost:27017/mercury',function(err, res){
+mongoose.connect(config.mongodb_address + '/' + config.mongodb_database,function(err, res){
 	if (err) {
 			console.log('ERROR connecting to database: ' + err);
 	} else {
-			console.log('Connected to mercury database');
+			console.log('Connected to ' + config.mongodb_database + ' database');
 	}
 });
 

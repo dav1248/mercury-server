@@ -3,24 +3,23 @@
  * 
  */
 
+var config = require('../config.json');
 var mqtt = require('mqtt');
 var mongoose = require('mongoose');
 var samplesData = require('../database/samples_model');
 
 
 
-var options = {port: 12541, username: 'pyklkptk',password: 'ZU46noxaEg5Q'};
-
 module.exports.connect = function(broker, options){
 
     if (!broker){
-        broker = 'mqtt://m15.cloudmqtt.com';
+        broker = config.mqtt_broker;
     }
     if (!options){
         options = {
-            port: 12541, 
-            username: 'pyklkptk',
-            password: 'ZU46noxaEg5Q'
+            port: config.mqtt_broker_port, 
+            username: config.mqtt_client_username,
+            password: config.mqtt_client_password
         };
     }
 
@@ -42,7 +41,6 @@ module.exports.connect = function(broker, options){
                 break;
             case 'data-stream':
                 console.log('receiving data...');
-                
                 save_to_database(message);
                 break;
             default:

@@ -1,0 +1,9 @@
+{
+    "mqtt_broker" : "mqtt://m15.cloudmqtt.com",
+    "mqtt_broker_port" : 12541,
+    "mqtt_client_username" : "pyklkptk",
+    "mqtt_client_password" : "ZU46noxaEg5Q",
+    "mongodb_address" : "mongodb://localhost:27017",
+    "mongodb_database" : "mercury",
+    "database_password" : "bionovo2018"
+}

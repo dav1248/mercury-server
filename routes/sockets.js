@@ -3,21 +3,14 @@
  * 
  */
 
-
+var config = require('../config.json');
 var socketio = require('socket.io');
 var samplesData = require('../database/samples_model');
 
 
-var testdata1 = {
-	"place": "ici",
-	"date": "12.10.18",
-	"time": "19:08",
-	"concentration": "200"
-}
 
 module.exports.listen = function(server){
 	io = socketio.listen(server);
-
 
 	// websocket front-end handling
 	io.of('browser').on('connection',function(socket) {
@@ -46,7 +39,6 @@ module.exports.listen = function(server){
 		});
 	
 	});
-
 
 
 	return io;

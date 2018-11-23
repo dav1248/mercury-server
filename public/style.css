@@ -111,6 +111,8 @@ h1 {
   border-collapse: collapse;
   margin: 2%;
   width: 90%;
+  max-height:800px;
+  overflow: auto;
 }
 
 #data_table td, #data_table th {
@@ -140,6 +142,11 @@ h1 {
 .input label {
   display: block;
   padding: 5px 0;
+  font-weight: bold;
+}
+
+#right-col p {
+  font-weight: bold;
 }
 
 input,
@@ -149,40 +156,44 @@ button {
 
 button {
   margin-top: 10px;
-  border: 0.1px solid grey;
+  border: 0.5px solid grey;
   border-radius: 1px;
   background: #ecf0f1;
   cursor: pointer;
   padding: 4px;
 }
 
-
 button:hover {
-  /*background: #bdc3c7;*/
+  background: #bdc3c7;
 }
 
 
 a.button {
-  -webkit-appearance: button;
+  /*-webkit-appearance: button;
   -moz-appearance: button;
-  appearance: button;
+  appearance: button;*/
 
   text-decoration: none;
   color: initial;
-  padding: 5px;
-  border-radius: 3px;
-  border-color: red;
+  border: 0.5px solid grey;
+  border-radius: 1px;
+  background: #ecf0f1;
+  padding: 4px;
 }
 
-#exportcsv {
+#table_tools{
+  padding-right: 3%;
+}
+
+.button_exportcsv {
   float: right;
   -webkit-appearance: button;
   -moz-appearance: button;
   appearance: button;
   text-decoration: none;
   font-weight: thick;
+  margin: 2% 2% 0 0;
   padding: 5px;
-  margin: 2% 5% 0 0;
   border-radius: 3px;
   color: #007fd3;
 }

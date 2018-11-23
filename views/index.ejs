@@ -27,7 +27,8 @@
 <div id="content">
     <div id="left-col" class="main_elem">
         <div id="table_tools">
-        <a href="/exporttocsv" id="exportcsv"> export to CSV </a>
+        <a href="/exporttocsv-selec" class="button_exportcsv"> export selection to CSV </a>
+        <a href="/exporttocsv" class="button_exportcsv"> export all to CSV </a>
         </div>
         <table id="data_table">
             <tr>
@@ -38,16 +39,18 @@
                 <th scole="col"> ID </th>
                 <th scole="col"> batch </th>
             </tr>
-            <% items.forEach(function(item){%>
-            <tr>
-            <td><%=item.place%></td>
-            <td><%=item.date.getDate()%>/<%=item.date.getMonth()%>/<%=item.date.getFullYear()%></td>
-            <td><%=item.date.getHours()%>:<%=item.date.getMinutes()%></td>
-            <td><%=item.concentration%></td>
-            <td><%=item._id%></td> 
-            <td><%=item.batch%></td> 
-            </tr>
-            <%});%>
+            <% if(locals.items){%>
+                <% items.forEach(function(item){%>
+                <tr>
+                <td><%=item.place%></td>
+                <td><%=item.date.getDate()%>/<%=item.date.getMonth()%>/<%=item.date.getFullYear()%></td>
+                <td><%=item.date.getHours()%>:<%=item.date.getMinutes()%></td>
+                <td><%=item.concentration%></td>
+                <td><%=item._id%></td> 
+                <td><%=item.batch%></td> 
+                </tr>
+                <%});%>
+            <%}%>
         </table>
     </div>
 
@@ -58,12 +61,24 @@
             <h3 class="text_centered"> Query data </h3>
             <form action="/query-data" method="post" class="group">
                 <div class="input">
-                    <label for="place">Place</label>
-                    <input type="text" id="place" name="place">
+                    <label for="query_place">Place</label>
+                    <input type="text" id="query_place" name="place">
                 </div>
                 <div class="input">
-                    <label for="date">Date</label>
-                    <input type="text" id="date" name="date">
+                    <label for="query_batch">Batch</label>
+                    <input type="text" id="query_batch" name="batch">
+                </div>
+                <div class="input">
+                    <label for="query_ID">ID</label>
+                    <input type="text" id="query_ID" name="ID">
+                </div>
+                <div class="input">
+                    <label for="query_date_from">Date <span style="font-weight: normal; padding-left: 25px" >from</span></label>
+                    <input type="date" id="query_date_from" name="date_from" placeholder="dd.mm.yyyy">
+                </div>
+                <div class="input">
+                    <label for="query_date_to"><span style="font-weight: normal; padding-left: 65px" >to</span></label>
+                    <input type="date" id="query_date_to" name="date_to" placeholder="dd.mm.yyyy">
                 </div>
                 <button type="submit"> search data </button>
             </form>
@@ -82,16 +97,16 @@
                 </div>
                 <div class="input">
                     <label for="date">Date</label>
-                    <input type="text" id="date" name="date">
+                    <input type="text" id="date" name="date" placeholder="dd.mm.yyyy">
                 </div>
+                <div class="input">
+                    <label for="batch">Batch</label>
+                    <input type="text" id="batch" name="batch">
+                 </div>  
                 <div class="input">
                     <label for="concentration">Concentration</label>
                     <input type="text" id="concentration" name="concentration">
                 </div>
-                <div class="input">
-                <label for="batch">Batch</label>
-                <input type="text" id="batch" name="batch">
-            </div>
                 <button type="submit"> insert </button>
             </form>
         </div>
@@ -109,7 +124,7 @@
 
             </form>
             </br>
-            <p> To reset the entire database, click the following button (<span style="color:red">warning: all data will be permanently erased</span>):</p>
+            <p> To reset the entire database, click the following button <span style="color:red">(warning: all data will be permanently erased)</span>:</p>
             <form action="/delete-all" method="post">
                 <div class="input">
                     <label for="pass_del">password</label>
@@ -123,75 +138,6 @@
         <hr>
     </div>
 </div>
-
-<!--
-<section class="insert">
-    <h3>Insert Data</h3>
-    <form action="/insert" method="post">
-        <div class="input">
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title">
-        </div>
-        <div class="input">
-            <label for="content">Content</label>
-            <input type="text" id="content_form" name="content">
-        </div>
-        <div class="input">
-            <label for="author">Author</label>
-            <input type="text" id="author" name="author">
-        </div>
-        <button type="submit">INSERT</button>
-    </form>
-</section>
-<section class="get">
-    <h3>Get Data</h3>
-    <a href="/get-data">LOAD DATA</a>
-    <div>
-    <% items.forEach(function(item) { %>
-            <article class="item">
-                <div>Title: <%= item.title %></div>
-                <div>Content: <%= item.content %></div>
-                <div>Author: <%= item.author %></div>
-                <div>ID: <%= item._id %></div>
-            </article>
-    <% }); %>
-    </div>
-</section>
-<section class="update">
-    <h3>Update Data</h3>
-    <form action="/update" method="post">
-		<div class="input">
-			<label for="id">ID</label>
-			<input type="text" id="id" name="id">
-		</div>
-        <div class="input">
-            <label for="title">Title</label>
-            <input type="text" id="title" name="title">
-        </div>
-        <div class="input">
-            <label for="content">Content</label>
-            <input type="text" id="content_form" name="content">
-        </div>
-        <div class="input">
-            <label for="author">Author</label>
-            <input type="text" id="author" name="author">
-        </div>
-        <button type="submit">UPDATE</button>
-    </form>
-</section>
-
-<section class="delete">
-    <h3>Delete Data</h3>
-    <form action="/delete" method="post">
-		<div class="input">
-			<label for="id">ID</label>
-			<input type="text" id="id" name="id">
-		</div>
-		<button type="submit">DELETE</button>
-	</form>
-</section>
-
--->
 
 
 
