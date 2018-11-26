@@ -1,3 +1,8 @@
+/**
+ * Express app
+ * 
+ */
+
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');

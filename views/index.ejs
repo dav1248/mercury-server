@@ -1,16 +1,19 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="http://code.jquery.com/jquery-1.5.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+<script src="../node_modules/dist/Chart.bundle.min.js"></script>
 </head>
 
 <body>
 
 <!-- Title block -->
 <div id="title">
-<img src="univalle_logo.png" alt="Universidad del Valle" id="univalle_logo">
-<h1>Bionovo Mercury concentration database </h1>
+<a href="/"><img src="univalle_logo.png" alt="Universidad del Valle" id="univalle_logo"></a>
+<a href="/" style="text-decoration: none;"><h1>Bionovo Mercury concentration database </h1></a>
 </div>
 
 <!-- Information block -->
@@ -30,28 +33,32 @@
         <a href="/exporttocsv-selec" class="button_exportcsv"> export selection to CSV </a>
         <a href="/exporttocsv" class="button_exportcsv"> export all to CSV </a>
         </div>
-        <table id="data_table">
-            <tr>
-                <th scope="col">place</th>
-                <th scope="col">date</th>
-                <th scope="col">time</th>
-                <th scope="col">concentration (ppb)</th>
-                <th scole="col"> ID </th>
-                <th scole="col"> batch </th>
-            </tr>
-            <% if(locals.items){%>
-                <% items.forEach(function(item){%>
+        <div id="table_container" style="overflow-x:auto;">
+            <table id="data_table">
                 <tr>
-                <td><%=item.place%></td>
-                <td><%=item.date.getDate()%>/<%=item.date.getMonth()%>/<%=item.date.getFullYear()%></td>
-                <td><%=item.date.getHours()%>:<%=item.date.getMinutes()%></td>
-                <td><%=item.concentration%></td>
-                <td><%=item._id%></td> 
-                <td><%=item.batch%></td> 
+                    <th scope="col">place</th>
+                    <th scope="col">date</th>
+                    <th scope="col">time</th>
+                    <th scope="col">concentration (ppb)</th>
+                    <th scole="col"> ID </th>
+                    <th scole="col"> batch </th>
                 </tr>
-                <%});%>
-            <%}%>
-        </table>
+                <% if(locals.items){%>
+                    <% items.forEach(function(item){%>
+                    <tr>
+                    <td><%=item.place%></td>
+                    <td><%=item.date.getDate()%>/<%=item.date.getMonth()+1%>/<%=item.date.getFullYear()%></td>
+                    <td><%=item.date.getHours()%>:<%=(item.date.getMinutes()<10?'0':'') + item.date.getMinutes()%></td>
+                    <td><%=item.concentration%></td>
+                    <td><%=item._id%></td> 
+                    <td><%=item.batch%></td> 
+                    </tr>
+                    <%});%>
+                <%}%>
+            </table>
+        </div>
+
+        <canvas id="myChart" width="90%" height="90%"></canvas>
     </div>
 
     <!-- Right column containing user input -->
@@ -74,11 +81,11 @@
                 </div>
                 <div class="input">
                     <label for="query_date_from">Date <span style="font-weight: normal; padding-left: 25px" >from</span></label>
-                    <input type="date" id="query_date_from" name="date_from" placeholder="dd.mm.yyyy">
+                    <input type="date" class="datepicker" id="query_date_from" name="date_from" placeholder="dd/mm/yyyy">
                 </div>
                 <div class="input">
                     <label for="query_date_to"><span style="font-weight: normal; padding-left: 65px" >to</span></label>
-                    <input type="date" id="query_date_to" name="date_to" placeholder="dd.mm.yyyy">
+                    <input type="date" class="datepicker" id="query_date_to" name="date_to"  placeholder="dd/mm/yyyy">
                 </div>
                 <button type="submit"> search data </button>
             </form>
@@ -97,7 +104,7 @@
                 </div>
                 <div class="input">
                     <label for="date">Date</label>
-                    <input type="text" id="date" name="date" placeholder="dd.mm.yyyy">
+                    <input type="text" class="datepicker" id="date" name="date" placeholder="dd/mm/yyyy">
                 </div>
                 <div class="input">
                     <label for="batch">Batch</label>
@@ -127,7 +134,7 @@
             <p> To reset the entire database, click the following button <span style="color:red">(warning: all data will be permanently erased)</span>:</p>
             <form action="/delete-all" method="post">
                 <div class="input">
-                    <label for="pass_del">password</label>
+                    <label for="pass_del">Password</label>
                     <input type="password" id="pass_del" name="pass_del">
                 </div>
                 <button type="submit"> reset database </a>
@@ -141,31 +148,74 @@
 
 
 
-
 <script>
-// Socket logic
 
-socket = io.connect('/browser');
 
-socket.onopen = function (event) {
-	console.log('Client Connected');
-	socket.send('hello'); // send a message event
-}
+    // jQuery logic
 
-$("#query_sys").click(function(){
-	socket.emit('query_sys','');
-});
+    $( function() {
+        $( ".datepicker" ).datepicker({ dateFormat: 'dd/mm/yy' });
+    } );
 
-// listening
 
-socket.on('data',function(data){
-	
-	newLine = "<tr><td>"+1+"</td><td>"+2+"</td><td>"+3+"</td><td>"+4+"</td></tr>";
 
-	$("#data_table").append(newLine);
 
-});
 
+    // Chart.js logic
+    var s1 = {
+        label: 's1',
+        borderColor: 'blue',
+        data: [
+          { x: '2017-01-06 18:39:30', y: 100 },
+          { x: '2017-01-07 18:39:28', y: 101 },
+        ]
+      };
+      
+      var s2 = {
+        label: 's2',
+        borderColor: 'red',
+        data: [
+          { x: '2017-01-07 18:00:00', y: 90 },
+          { x: '2017-01-08 18:00:00', y: 105 },
+        ]
+      };
+      
+      var ctx = document.getElementById('myChart').getContext('2d');
+      
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: { datasets: [s1, s2] },
+        options: {
+          scales: {
+            xAxes: [{
+              type: 'time'
+            }]
+          }
+        }
+      });
+
+
+
+
+    // Socket logic
+    socket = io.connect('/browser');
+    socket.onopen = function (event) {
+        console.log('Client Connected');
+        socket.send('hello'); // send a message event
+    }
+
+    $("#query_sys").click(function(){
+        socket.emit('query_sys','');
+    });
+
+    // listening
+    socket.on('data',function(data){
+        
+        newLine = "<tr><td>"+1+"</td><td>"+2+"</td><td>"+3+"</td><td>"+4+"</td></tr>";
+
+        $("#data_table").append(newLine);
+
+    });
 </script>
 	
 	

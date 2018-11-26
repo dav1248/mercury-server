@@ -110,9 +110,14 @@ h1 {
 #data_table {
   border-collapse: collapse;
   margin: 2%;
-  width: 90%;
-  max-height:800px;
+  width: 100%;
   overflow: auto;
+}
+
+#table_container{
+  width:90%;
+  overflow:auto;
+  max-height:800px;
 }
 
 #data_table td, #data_table th {
@@ -145,9 +150,9 @@ h1 {
   font-weight: bold;
 }
 
-#right-col p {
+/*#right-col p {
   font-weight: bold;
-}
+}*/
 
 input,
 button {
@@ -200,4 +205,14 @@ a.button {
 
 a.button:hover {
   background: #bdc3c7;
+}
+
+
+
+
+/* external to file  */
+
+.ui-datepicker { 
+  margin-left: -65px;
+  /*z-index: 1000;*/
 }

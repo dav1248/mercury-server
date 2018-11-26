@@ -20,9 +20,8 @@ router.get('',function(req, res){
 
 router.get('/get-data', function(req, res, next){
 	samplesData.find()
-		.then(function(doc){
-			res.render('index',{items:doc});	
-			console.log(doc);
+		.then(function(docs){
+			res.render('index',{items:docs});	
 	});	
 	
 });
@@ -71,31 +70,35 @@ router.post('/query-data', function(req, res, next){
 		query.where('id',req.body.id);
 	}
 	if(req.body.date_from && req.body.date_to){
-		query.where('date').gte(req.body.date).lte(req.body.date_to);
+
+		var from = date.parse(req.body.date_from, 'DD/MM/YYYY'); //TODO: catch error
+		var to = date.parse(req.body.date_to, 'DD/MM/YYYY');
+
+		console.log(to);
+		to.setTime(to.getTime()-1000);
+		to.setDate(to.getDate()+1);
+		console.log(to);
+		console.log(typeof to);
+		var d = new Date();
+		var n = d.getTimezoneOffset();
+		console.log(n);
+		query.where('date').gte(from).lte(to);
 	}
 
-	query.lean().exec(function(err, doc){
+	query.lean().exec(function(err, docs){
 		if(err){
 			console.log(err);
 		}
 		
-		last_db_query = doc;
-		res.render('index',{items:doc});	
+		last_db_query = docs;
+		res.render('index',{items:docs});	
 	});	
-
-	/*
-	samplesData.find({'place': req.body.place, 'date': req.body.date, 'id': req.body.id,})
-		.then(function(doc){
-			res.render('index',{items:doc});	
-			console.log(doc);
-	});
-	*/	
 });
 
 router.post('/insert', function(req, res, next){
 	var item = {
 		place: req.body.place,
-		date: date.parse(req.body.date, 'JJ/MM/YYYY') || Date.now(),
+		date: date.parse(req.body.date, 'DD/MM/YYYY') || new Date(),
 		concentration: req.body.concentration,
 		batch: req.body.batch
 	};

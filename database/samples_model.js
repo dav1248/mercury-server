@@ -16,14 +16,19 @@ mongoose.connect(config.mongodb_address + '/' + config.mongodb_database,function
 });
 
 var Schema = mongoose.Schema; // defines how mongoose with write the data in the database and which collection to use
-var dataSchema = new Schema({
-	place: String,
-	date: {type: Date, default: Date.now()},
-    time: {type: Date, default: Date.now()},
-	concentration: {type: Number, required: true, min:0},
-	batch: {type: Number, min:0}
+var samplesSchema = new Schema({
+
+	place: String, // place of sampling
+	date: {type: Date, default: new Date()}, // date of measuring
+	concentration: {type: Number, required: true, min:0}, // mercury concentration of sample
+	batch: {type: Number, min:0}, // batch number
+	ph: {type: Number, min:0, max: 14}, // ph of the mixed solution
+	temperature: {type: Number}, // degrees, temperature when measuring
+	meteo: {type: String}, // meteo on the day of sampling
+	voltage: {type: Number} // voltage of the spectro when measuring
+
 }, {collection: 'samples-data'});  // javascript object defining the schema
 
-var samplesData = mongoose.model('samplesData', dataSchema); // instance of model, called document
+var samplesData = mongoose.model('samplesData', samplesSchema); // instance of model, called document
 
 module.exports = samplesData;
