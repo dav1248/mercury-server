@@ -13,13 +13,13 @@ var samplesData = require('../database/samples_model');
 module.exports.connect = function(broker, options){
 
     if (!broker){
-        broker = config.mqtt_broker;
+        broker = config.MQTT_BROKER;
     }
     if (!options){
         options = {
-            port: config.mqtt_broker_port, 
-            username: config.mqtt_client_username,
-            password: config.mqtt_client_password
+            port: config.MQTT_BROKER_PORT, 
+            username: config.MQTT_CLIENT_USERNAME,
+            password: config.MQTT_CLIENT_PASSWORD
         };
     }
 
@@ -54,15 +54,17 @@ module.exports.connect = function(broker, options){
         console.log(message.toString());
         item = JSON.parse(message);
 
-        data = new samplesData(item); // we can do this because item has same struct as schema
+        doc = new samplesData(item); // we can do this because item has same struct as schema
         
-        data.validate(function(err){
+        // basic schema validation
+        doc.validate(function(err){
             if(err){
                 return err;
             }
         });
 
-        data.save(function(err){
+        // saving doc to database
+        doc.save(function(err){
             if(err){
                 return err;
             }

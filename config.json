@@ -1,9 +1,12 @@
 {
-    "mqtt_broker" : "mqtt://m15.cloudmqtt.com",
-    "mqtt_broker_port" : 12541,
-    "mqtt_client_username" : "pyklkptk",
-    "mqtt_client_password" : "ZU46noxaEg5Q",
-    "mongodb_address" : "mongodb://localhost:27017",
-    "mongodb_database" : "mercury",
-    "database_password" : "bionovo2018"
+    "MQTT_BROKER" : "mqtt://m15.cloudmqtt.com",
+    "MQTT_BROKER_PORT" : 12541,
+    "MQTT_CLIENT_USERNAME" : "pyklkptk",
+    "MQTT_CLIENT_PASSWORD" : "ZU46noxaEg5Q",
+    "MONGODB_ADDRESS" : "mongodb://localhost:27017",
+    "MONGODB_DATABASE" : "mercury",
+    "DATABASE_PASSWORD" : "bionovo2018",
+    "ACCUWEATHER_APIKEY" : "3ElDjWLt514RTeWLIMK2m3FzjYDo7HWW",
+    "OWM_APIKEY" : "1c9ff3e60615cad7e898438c8244488b",
+    "DARKSKY_APIKEY": "70cbe88d3f585f979eac05fcc3dace4f"
 }

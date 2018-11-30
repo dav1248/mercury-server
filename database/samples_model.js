@@ -7,11 +7,11 @@ var config = require('../config.json');
 var mongoose = require('mongoose');
 
 // mongoose init
-mongoose.connect(config.mongodb_address + '/' + config.mongodb_database,function(err, res){
+mongoose.connect(config.MONGODB_ADDRESS + '/' + config.MONGODB_DATABASE,function(err, res){
 	if (err) {
 			console.log('ERROR connecting to database: ' + err);
 	} else {
-			console.log('Connected to ' + config.mongodb_database + ' database');
+			console.log('Connected to ' + config.MONGODB_DATABASE + ' database');
 	}
 });
 

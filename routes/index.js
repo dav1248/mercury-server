@@ -10,8 +10,10 @@ var mongoose = require('mongoose');
 var date = require('date-and-time');
 var csv = require('csv-express');
 var samplesData = require('../database/samples_model');
+var weather_api = require('./weather_api');
 
-var password = config.database_password;
+
+var password = config.DATABASE_PASSWORD;
 var last_db_query = [];
 
 router.get('',function(req, res){
@@ -150,6 +152,17 @@ router.post('/delete-all', function(req, res, next){
 		});
 	}
 
+	res.redirect('/');
+});
+
+router.get('/get-weather',function(req,res,next){
+
+	var latitude = '2.954385';
+	var longitude = '-76.696018';
+	var unixTime = '1511874900';
+	
+	weather_api.getWeather(latitude, longitude, unixTime);
+	
 	res.redirect('/');
 });
 
