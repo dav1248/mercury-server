@@ -102,16 +102,30 @@ router.post('/insert', function(req, res, next){
 		place: req.body.place,
 		date: date.parse(req.body.date, 'DD/MM/YYYY') || new Date(),
 		concentration: req.body.concentration,
-		batch: req.body.batch
+		batch: req.body.batch,
+		
 	};
 
-	var data = new samplesData(item); // we can do this because item has same struct as schema: creates a document instance (mongoose document)
-	data.save(function(err){
-		if(err){
-			console.log(err);
-		}
-	}); // stores it into the database
-	
+	weather_api.getWeather(item.latitude, item.longitude, Math.round(item.date.getTime() / 1000), function(err, res){
+
+		item.meteo = weather_api.getMeteo(res);
+		item.rain = weather_api.getRain(res);
+		item.temperature = Math.round(weather_api.getTemperature(res)*10).;
+
+
+		var data = new samplesData(item); // we can do this because item has same struct as schema: creates a document instance (mongoose document)
+
+
+		data.save(function(err){
+			if(err){
+				console.log(err);
+			}
+			console.log('Document saved:' + data);
+		}); // stores it into the database
+		
+	});
+
+
 	
 	res.redirect('/');
 });

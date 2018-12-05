@@ -22,7 +22,8 @@
     <b>Welcome to the Mercury concentration database of research group Bionovo.</b>
     </p>
     <p style="margin: 0 60px 0 60px;">
-    Interactions with the database are done on the right pannel. You can view the database by clicking on the <b>get data</b> button. You can also download the data in <i>csv</i> format. For test purposes, insertion of new elements is possible. 
+    Interactions with the database are done on the right pannel. You can view the database by clicking on the <b>get data</b> button. You can also download the data in <i>csv</i> format. Insertion of one element into the database is possible; the required fields are Place, Date and Concentration.
+    Deletion of any element (row) of the database is done through its associated <b>unique ID</b>.
     <p>
 </div>
 
@@ -40,8 +41,10 @@
                     <th scope="col">date</th>
                     <th scope="col">time</th>
                     <th scope="col">concentration (ppb)</th>
-                    <th scole="col"> ID </th>
                     <th scole="col"> batch </th>
+                    <th scole="col"> weather </th>
+                    <th scole="col"> temperature </th>
+                    <th scole="col"> ID </th>
                 </tr>
                 <% if(locals.items){%>
                     <% items.forEach(function(item){%>
@@ -50,8 +53,11 @@
                     <td><%=item.date.getDate()%>/<%=item.date.getMonth()+1%>/<%=item.date.getFullYear()%></td>
                     <td><%=item.date.getHours()%>:<%=(item.date.getMinutes()<10?'0':'') + item.date.getMinutes()%></td>
                     <td><%=item.concentration%></td>
-                    <td><%=item._id%></td> 
                     <td><%=item.batch%></td> 
+                    <td><%=item.meteo%></td> 
+                    <td><%=item.temperature==undefined ? '' : item.temperature + '°C'%></td> 
+                    <td><%=item._id%></td> 
+
                     </tr>
                     <%});%>
                 <%}%>
@@ -114,6 +120,18 @@
                     <label for="concentration">Concentration</label>
                     <input type="text" id="concentration" name="concentration">
                 </div>
+                <div class="input">
+                    <label for="person">Person</label>
+                    <input type="text" id="person" name="person">
+                </div>
+                <div class="input">
+                    <label for="method">Method</label>
+                    <input type="text" id="method" name="method">
+                </div>
+                <div class="input">
+                    <label for="comment">Comment</label>
+                    <input type="text" id="comment" name="comment">
+                </div>
                 <button type="submit"> insert </button>
             </form>
         </div>
@@ -141,9 +159,7 @@
             </form>
 
         </div>
-        <a href="/get-weather" class="button">get weather from API</a>
         </br>
-        <hr>
     </div>
 </div>
 
