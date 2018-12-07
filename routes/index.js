@@ -75,15 +75,6 @@ router.post('/query-data', function(req, res, next){
 
 		var from = date.parse(req.body.date_from, 'DD/MM/YYYY'); //TODO: catch error
 		var to = date.parse(req.body.date_to, 'DD/MM/YYYY');
-
-		console.log(to);
-		to.setTime(to.getTime()-1000);
-		to.setDate(to.getDate()+1);
-		console.log(to);
-		console.log(typeof to);
-		var d = new Date();
-		var n = d.getTimezoneOffset();
-		console.log(n);
 		query.where('date').gte(from).lte(to);
 	}
 
@@ -92,6 +83,61 @@ router.post('/query-data', function(req, res, next){
 			console.log(err);
 		}
 		
+		// info needed: concentration for each batch group
+		// how presented: items with batch number and pairs concentration-date
+		// Careful: only has to query data that is displayed.
+		/*
+		Member
+		.findOne({ country_id: 10 })
+		.sort('-score')  // give me the max
+		.exec(function (err, member) {
+	  
+		  // your callback code
+	  
+		});
+
+		var query2 = query
+		.sort('-batch')
+		.limit(1)
+		.exec( function(err, docs){
+
+			var maxBatch = docs[0].batch;
+
+			console.log(maxBatch);
+
+
+			for(i=1;i<maxBatch;i++){
+				var query2 = samplesData.find();
+	
+	
+			}
+
+
+
+
+
+
+
+		})
+		
+		*/
+		
+
+		/*
+		for(i=1;i<maxBatch;i++){
+			var query2 = samplesData.find();
+
+
+		}
+
+		*/
+
+
+
+
+
+
+
 		last_db_query = docs;
 		res.render('index',{items:docs});	
 	});	
@@ -110,7 +156,7 @@ router.post('/insert', function(req, res, next){
 
 		item.meteo = weather_api.getMeteo(res);
 		item.rain = weather_api.getRain(res);
-		item.temperature = Math.round(weather_api.getTemperature(res)*10).;
+		item.temperature = Math.round(weather_api.getTemperature(res)*10)/10;
 
 
 		var data = new samplesData(item); // we can do this because item has same struct as schema: creates a document instance (mongoose document)
@@ -122,7 +168,7 @@ router.post('/insert', function(req, res, next){
 			}
 			console.log('Document saved:' + data);
 		}); // stores it into the database
-		
+
 	});
 
 

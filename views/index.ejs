@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="http://code.jquery.com/jquery-1.5.min.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script src="../node_modules/dist/Chart.bundle.min.js"></script>
 </head>
 
 <body>
@@ -34,6 +34,7 @@
         <a href="/exporttocsv-selec" class="button_exportcsv"> export selection to CSV </a>
         <a href="/exporttocsv" class="button_exportcsv"> export all to CSV </a>
         </div>
+        <div id="myChart" style="height: 400px; width: 90%;"></div>
         <div id="table_container" style="overflow-x:auto;">
             <table id="data_table">
                 <tr>
@@ -52,8 +53,8 @@
                     <td><%=item.place%></td>
                     <td><%=item.date.getDate()%>/<%=item.date.getMonth()+1%>/<%=item.date.getFullYear()%></td>
                     <td><%=item.date.getHours()%>:<%=(item.date.getMinutes()<10?'0':'') + item.date.getMinutes()%></td>
-                    <td><%=item.concentration%></td>
-                    <td><%=item.batch%></td> 
+                    <td id="concentration_data"><%=item.concentration%></td>
+                    <td id="batch_data"><%=item.batch%></td> 
                     <td><%=item.meteo%></td> 
                     <td><%=item.temperature==undefined ? '' : item.temperature + '°C'%></td> 
                     <td><%=item._id%></td> 
@@ -63,14 +64,12 @@
                 <%}%>
             </table>
         </div>
-
-        <canvas id="myChart" width="90%" height="90%"></canvas>
     </div>
 
     <!-- Right column containing user input -->
-    <div id="right-col" class="main_elem">
+    <div id="right-col" >
 
-        <div id="query">
+        <div id="query" class="main_elem right_elem">
             <h3 class="text_centered"> Query data </h3>
             <form action="/query-data" method="post" class="group">
                 <div class="input">
@@ -98,10 +97,7 @@
             <!--<input type="button" value="query system" id="query_sys" style="display: inline-block" />-->
             <a href="/get-data" class="button"> get all data </a>
         </div>
-        </br>
-        <hr>
-
-        <div id="insertion">
+        <div id="insertion" class="main_elem right_elem">
             <h3 class="text_centered"> Insert entry to database </h3>
             <form action="/insert" method="post">
                 <div class="input">
@@ -135,9 +131,7 @@
                 <button type="submit"> insert </button>
             </form>
         </div>
-        </br>
-        <hr>
-        <div id="deletion">
+        <div id="deletion" class="main_elem right_elem">
             <h3 class="text_centered"> Delete data </h3>
             <p> You can delete some element of the database by entering its unique ID:</p>
             <form action="/delete-elem" method="post">
@@ -159,7 +153,6 @@
             </form>
 
         </div>
-        </br>
     </div>
 </div>
 
@@ -174,41 +167,77 @@
     } );
 
 
-
-
-
     // Chart.js logic
-    var s1 = {
-        label: 's1',
-        borderColor: 'blue',
-        data: [
-          { x: '2017-01-06 18:39:30', y: 100 },
-          { x: '2017-01-07 18:39:28', y: 101 },
-        ]
-      };
-      
-      var s2 = {
-        label: 's2',
-        borderColor: 'red',
-        data: [
-          { x: '2017-01-07 18:00:00', y: 90 },
-          { x: '2017-01-08 18:00:00', y: 105 },
-        ]
-      };
-      
-      var ctx = document.getElementById('myChart').getContext('2d');
-      
-      var myChart = new Chart(ctx, {
-        type: 'line',
-        data: { datasets: [s1, s2] },
-        options: {
-          scales: {
-            xAxes: [{
-              type: 'time'
-            }]
-          }
-        }
-      });
+
+    var graph_data = [];
+
+    var items = <%-JSON.stringify(locals.items)%>;
+
+    // puts the raw server input into batch groups
+    var get_data_canvas = function(items){
+
+        var batches = {};
+
+        items.forEach(function(item){
+
+            if (!batches[item.batch]){
+                batches[item.batch] = [item];
+            } else {
+                batches[item.batch].push(item);
+
+            }
+        });
+        return batches;
+    }
+
+    var batches = get_data_canvas(items);
+
+    // forms a line for each batch
+    var lines = [];
+    for(var key in batches) {
+        var item_array = batches[key];  //un array de docs
+
+
+        var item = {};
+        item.type = 'line';
+        item.dataPoints = [];
+
+        item_array.forEach(function(point){
+            item.dataPoints.push({x : new Date(point.time), y : point.concentration});
+        });
+
+
+        lines.push(item);
+    }
+
+      $( function(){
+        
+        var myChart = new CanvasJS.Chart("myChart", {
+            backgroundColor: "#F4F4F4",
+            title:{
+                text: "Mercury distribution by batch"  ,
+                fontFamily: "tahoma",
+                fontSize: 30,
+                fontWeight: "lighter",  
+
+            },
+            axisX:{
+                title: "timeline",
+                labelFormatter: function (e) { return CanvasJS.formatDate(e.value, "DD MMM");},
+            },
+            axisY: {
+                title: "Concentration (ppb)",
+                maximum: 300
+            },
+            data: lines
+        });
+
+        myChart.render();
+        console.log('rendered');
+        });
+        
+        
+
 
 
 
@@ -220,18 +249,6 @@
         socket.send('hello'); // send a message event
     }
 
-    $("#query_sys").click(function(){
-        socket.emit('query_sys','');
-    });
-
-    // listening
-    socket.on('data',function(data){
-        
-        newLine = "<tr><td>"+1+"</td><td>"+2+"</td><td>"+3+"</td><td>"+4+"</td></tr>";
-
-        $("#data_table").append(newLine);
-
-    });
 </script>
 	
 	

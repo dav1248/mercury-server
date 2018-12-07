@@ -18,7 +18,7 @@ mongoose.connect(config.MONGODB_ADDRESS + '/' + config.MONGODB_DATABASE,function
 var Schema = mongoose.Schema; // defines how mongoose with write the data in the database and which collection to use
 var samplesSchema = new Schema({
 
-	place: String, // place of sampling
+	place: {type: String, required: true}, // place of sampling
 	gps: {type: [Number]}, // gps coordinates of the sampling place
 	date: {type: Date, default: new Date()}, // date of measuring
 	concentration: {type: Number, required: true, min:0}, // mercury concentration of sample

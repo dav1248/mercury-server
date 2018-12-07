@@ -1,3 +1,201 @@
+
+
+* {
+  box-sizing: border-box;
+	font-family: arial, sans-serif;
+}
+
+body {
+  padding: 1%;
+  background-color: #fdfbfb
+}
+
+/* Title  */
+
+h1 {
+	text-align: center;
+	padding: 1em;
+	color: red;
+}
+
+
+#univalle_logo {
+	width: 60px;
+}
+
+#title{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+#info {
+  width: 100%;
+}
+
+
+/* Content  */
+
+#content {
+  /*min-height: 500px;*/
+	overflow: hidden;	
+	margin-top: 1%;
+  display: flex;
+	flex-direction: row;
+  justify-content: center;
+}
+
+#left-col {
+  width: 70%;
+  display: flex;
+	flex-direction: column;
+  align-items: center;
+}
+
+
+#table_tools {
+  width: 100%;
+  padding-bottom: 1%;
+}
+
+
+#data_table {
+  border-collapse: collapse;
+  margin: 2%;
+  width: 100%;
+  overflow: auto;
+}
+
+#table_container{
+  width:98%;
+  overflow:auto;
+  max-height:800px;
+}
+
+/* Table style */
+
+#data_table td, #data_table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#data_table tr:nth-child(even){background-color: #f2f2f2;}
+
+#data_table tr:hover {background-color: #ddd;}
+
+#data_table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(170, 170, 170);
+  color: white;
+}
+
+
+#myChart {
+  margin: 3% 0 3% 0;
+}
+
+
+
+/* */
+
+#right-col {
+  margin-left: 1%;
+  width: 30%;
+}
+
+.right_elem {
+  padding: 0 4% 3% 4%;
+  margin-bottom: 2%;
+}
+
+#right-col button, #right-col .button {
+  float: right;
+}
+
+
+#query::after{
+    content: "";
+    clear: both;
+    display: table;
+}
+
+#insertion::after{
+  content: "";
+  clear: both;
+  display: table;
+}
+
+#deletion::after{
+  content: "";
+  clear: both;
+  display: table;
+}
+
+
+
+.input label {
+  display: block;
+  padding: 5px 0;
+  font-weight: bold;
+}
+
+
+input,
+button {
+  font: inherit;
+}
+
+button {
+  margin-top: 10px;
+  border: 0.5px solid grey;
+  border-radius: 1px;
+  background: #ecf0f1;
+  cursor: pointer;
+  padding: 4px;
+}
+
+button:hover {
+  background: #bdc3c7;
+}
+
+a.button {
+  /*-webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;*/
+
+  text-decoration: none;
+  color: initial;
+  border: 0.5px solid grey;
+  border-radius: 1px;
+  background: #ecf0f1;
+  padding: 4px;
+}
+
+a.button:hover {
+  background: #bdc3c7;
+}
+
+.button_exportcsv {
+  float: right;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+  text-decoration: none;
+  font-weight: thick;
+  margin: 2% 2% 0 0;
+  padding: 5px;
+  border-radius: 3px;
+  color: #007fd3;
+}
+
+
+
+
+/* Class modifiers */
+
 .main_elem {
   border: 1px solid #E4E4E4;
   background-color: #F4F4F4;
@@ -29,188 +227,8 @@
   display: table;
 }
 
-* {
-  box-sizing: border-box;
-	font-family: arial, sans-serif;
-}
 
-body {
-  padding: 1%;
-  background-color: #fdfbfb
-}
-
-
-h1 {
-	text-align: center;
-	padding: 1em;
-	color: red;
-}
-
-
-#univalle_logo {
-	width: 60px;
-}
-
-#title{
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-}
-
-#info {
-  width: 100%;
-}
-
-#content {
-  min-height: 600px;
-	overflow: hidden;	
-	margin-top: 1%;
-  display: flex;
-	flex-direction: row;
-  justify-content: center;
-}
-
-#left-col {
-  width: 70%;
-  display: flex;
-	flex-direction: column;
-  align-items: center;
-}
-
-#right-col {
-  margin-left: 1%;
-  padding: 0 3% 0 3%;
-  width: 30%;
-}
-
-
-
-#query::after{
-    content: "";
-    clear: both;
-    display: table;
-}
-
-#insertion::after{
-  content: "";
-  clear: both;
-  display: table;
-}
-
-#deletion::after{
-  content: "";
-  clear: both;
-  display: table;
-}
-
-#table_tools {
-  width: 100%;
-}
-#data_table {
-  border-collapse: collapse;
-  margin: 2%;
-  width: 100%;
-  overflow: auto;
-}
-
-#table_container{
-  width:90%;
-  overflow:auto;
-  max-height:800px;
-}
-
-#data_table td, #data_table th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-#data_table tr:nth-child(even){background-color: #f2f2f2;}
-
-#data_table tr:hover {background-color: #ddd;}
-
-#data_table th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: rgb(170, 170, 170);
-  color: white;
-}
-
-
-
-#right-col button, #right-col .button {
-  float: right;
-}
-
-
-.input label {
-  display: block;
-  padding: 5px 0;
-  font-weight: bold;
-}
-
-/*#right-col p {
-  font-weight: bold;
-}*/
-
-input,
-button {
-  font: inherit;
-}
-
-button {
-  margin-top: 10px;
-  border: 0.5px solid grey;
-  border-radius: 1px;
-  background: #ecf0f1;
-  cursor: pointer;
-  padding: 4px;
-}
-
-button:hover {
-  background: #bdc3c7;
-}
-
-
-a.button {
-  /*-webkit-appearance: button;
-  -moz-appearance: button;
-  appearance: button;*/
-
-  text-decoration: none;
-  color: initial;
-  border: 0.5px solid grey;
-  border-radius: 1px;
-  background: #ecf0f1;
-  padding: 4px;
-}
-
-#table_tools{
-  padding-right: 3%;
-}
-
-.button_exportcsv {
-  float: right;
-  -webkit-appearance: button;
-  -moz-appearance: button;
-  appearance: button;
-  text-decoration: none;
-  font-weight: thick;
-  margin: 2% 2% 0 0;
-  padding: 5px;
-  border-radius: 3px;
-  color: #007fd3;
-}
-
-a.button:hover {
-  background: #bdc3c7;
-}
-
-
-
-
-/* external to file  */
+/* jQueryUI  */
 
 .ui-datepicker { 
   margin-left: -65px;
